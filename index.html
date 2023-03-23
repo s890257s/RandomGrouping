@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>依成績隨機分組</title>
+<link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="box">
+        <div class="optionHome">
+            <div>
+                <p>總組數：<span id="groupCountBTNs"></span></p><input type="number" id="totalGroups" value="" min="1">
+            </div>
+            <div>
+                <p>原始資料：(請依成績排名)</p>
+                <textarea id="memberHome" cols="20" rows="20"></textarea>
+            </div>
+            <div class="btnBox">
+                <button id="clearBTN">清除名單</button>
+                <button id="assignBTN">區間分組</button>
+            </div>
+        </div>
+        <div id="groupHome" class="groupHome">
+        </div>
+    </div>
+
+</body>
+<script src="index.js"></script>
+</html>
