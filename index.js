@@ -8,6 +8,7 @@ const groupCountBTNs = document.getElementById("groupCountBTNs");
 const saveDataBTNs = document.getElementsByClassName("savaDataBTNs")[0];
 const removeDataBTN = document.getElementById("removeDataBTN");
 let finalGroups = []; //最終分組
+let isGroupingByRandom = false;
 let isExample = true;
 
 
@@ -43,22 +44,33 @@ assignBTN.addEventListener("click", function () {
     return;
   }
 
-  //第一次照順序分組
-  for (let i = 0; i < memberSize; i += tG) {
-    groupOfOrder.push(memberArray.slice(i, i + tG));
-  }
+  //開發中-完全隨機分組
+  if (isGroupingByRandom) {
+    shuffle(memberArray);
 
-  //打亂每組順序
-  groupOfOrder.forEach((g) => {
-    shuffle(g);
-  });
-
-  //逐一從每組中抓人，放到最終分組名單
-  for (let i = 0; i < tG; i++) {
-    finalGroups.push([]);
-    for (let j = 0; j < groupOfOrder.length; j++) {
-      finalGroups[i].push(groupOfOrder[j][i]);
+    for (let i = 0; i < memberSize; i += tG) {
+      groupOfOrder.push(memberArray.slice(i, i + tG));
     }
+
+  } else {
+    //第一次照順序分組
+    for (let i = 0; i < memberSize; i += tG) {
+      groupOfOrder.push(memberArray.slice(i, i + tG));
+    }
+
+    //打亂每組順序
+    groupOfOrder.forEach((g) => {
+      shuffle(g);
+    });
+
+    //逐一從每組中抓人，放到最終分組名單
+    for (let i = 0; i < tG; i++) {
+      finalGroups.push([]);
+      for (let j = 0; j < groupOfOrder.length; j++) {
+        finalGroups[i].push(groupOfOrder[j][i]);
+      }
+    }
+
   }
 
   renderPage();
