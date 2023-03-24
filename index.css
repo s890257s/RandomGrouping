@@ -68,6 +68,10 @@ textarea::-webkit-scrollbar-thumb {
     color: white;
 }
 
+#removeDataBTN {
+    background-color: wheat;
+}
+
 /* 輸入欄位及顯示區域樣式 */
 input,
 textarea {

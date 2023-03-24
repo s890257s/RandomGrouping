@@ -6,6 +6,7 @@ const clearBTN = document.getElementById("clearBTN");
 const groupHome = document.getElementById("groupHome");
 const groupCountBTNs = document.getElementById("groupCountBTNs");
 const saveDataBTNs = document.getElementsByClassName("savaDataBTNs")[0];
+const removeDataBTN = document.getElementById("removeDataBTN");
 let finalGroups = []; //最終分組
 let isExample = true;
 
@@ -25,8 +26,8 @@ let isExample = true;
   groupCountBTNs.innerHTML = btns;
 
   //讀取並渲染保存的資料
-  let t, saveDatas = (t = localStorage.getItem("saveDatas")) === null ? [] : JSON.parse(t);
-  renderSaveData(saveDatas);
+  let t, saveData = (t = localStorage.getItem("saveData")) === null ? [] : JSON.parse(t);
+  renderSaveData(saveData);
 })();
 
 //分組邏輯(照順序分組 → 打亂每組順序 → 從每組中逐一抓人，丟到最終分組名單)
@@ -119,9 +120,12 @@ clearBTN.addEventListener("click", () => {
 });
 
 //清除所有資料
-function removeAllData() {
-
-}
+removeDataBTN.addEventListener("click", function () {
+  if (confirm("移除所有歷史分組?")) {
+    saveDataBTNs.innerHTML = "";
+    localStorage.removeItem("saveData")
+  }
+})
 
 // 判斷總組數input是否為 4 - 7
 totalGroups.addEventListener("input", () => {
@@ -154,20 +158,21 @@ memberHome.addEventListener("change", () => {
 //保存分組資料
 function saveData() {
 
-  let t, saveDatas = (t = localStorage.getItem("saveDatas")) === null ? [] : JSON.parse(t);
+  let t, saveData = (t = localStorage.getItem("saveData")) === null ? [] : JSON.parse(t);
 
-  saveDatas.push({ id: getUUID(), groups: finalGroups });
+  saveData.push({
+    id: getUUID(), groups: finalGroups, originData: memberHome.value
+  });
 
+  localStorage.setItem('saveData', JSON.stringify(saveData));
 
-  localStorage.setItem('saveDatas', JSON.stringify(saveDatas));
-
-  renderSaveData(saveDatas);
+  renderSaveData(saveData);
 }
 
 //渲染分組資料按鈕
-function renderSaveData(saveDatas) {
+function renderSaveData(saveData) {
   let outPutBTNs = "";
-  saveDatas.forEach(s => {
+  saveData.forEach(s => {
     outPutBTNs += `<button class='saveDataBTN' id='${s.id}'>${s.id.slice(0, 6)}</button>`;
   })
   saveDataBTNs.innerHTML = outPutBTNs;
@@ -177,9 +182,11 @@ function renderSaveData(saveDatas) {
 saveDataBTNs.addEventListener('click', function (e) {
 
   if (e.target.classList.contains("saveDataBTN")) {
-    targetGroup = JSON.parse(localStorage.getItem("saveDatas")).filter(item => item.id == e.target.id)[0]
+    targetGroup = JSON.parse(localStorage.getItem("saveData")).filter(item => item.id == e.target.id)[0]
     finalGroups = targetGroup.groups;
     totalGroups.value = targetGroup.groups.length;
+    memberHome.value = targetGroup.originData;
     renderPage();
+    totalGroups.dispatchEvent(new CustomEvent("input"));
   }
 })
